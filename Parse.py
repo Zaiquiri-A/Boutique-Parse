@@ -24,6 +24,11 @@ with open ('3-26 Boutique Sales.txt', 'r') as f:
 #sets the dollar total to 0
 total = 0
 
+#initializes empty lists for item name and count, then combines them into a 2d list
+iName = []
+iCount = []
+items = [iName,iCount]
+
 #iterates through each line to collect the dollar amounts
 for x in lines:
     #print(x)
@@ -69,14 +74,22 @@ for x in lines:
     parenthClose = list(find_all(x, ')'))
     #print(parenthClose)
     
+    #Sets the list index to 0 for iterating through the list of located parenthesis
     listIndex = 0
-    print('len(parenthOpen) = ' + str(len(parenthOpen)))
+    #print('len(parenthOpen) = ' + str(len(parenthOpen)))
+
+    #Iterates through the list of found parenthesis
     while listIndex < len(parenthOpen):
         
-        print('listIndex = ' + str(listIndex))
-        print(x[parenthOpen[listIndex] + 1].isdigit())
+        #print('listIndex = ' + str(listIndex))
+        #print(x[parenthOpen[listIndex] + 1].isdigit())
+        
+        #Determines whether the character iside the parenthesis is a digit or a letter
         if x[parenthOpen[listIndex]+1].isdigit():
             print('digit')
+            #finds number of characters in digit (assumed to be less than 3)
+            #add value to item price to corre
+
         else:
             print('alpha')
         
