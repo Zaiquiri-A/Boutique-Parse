@@ -86,12 +86,33 @@ for x in lines:
         
         #Determines whether the character iside the parenthesis is a digit or a letter
         if x[parenthOpen[listIndex]+1].isdigit():
-            print('digit')
-            #finds number of characters in digit (assumed to be less than 3)
-            #add value to item price to corre
+            #print('digit')
 
-        else:
-            print('alpha')
+            #finds number of characters in digit (assumed to be less than 3)
+            #single digit case
+            if x[parenthOpen[listIndex]+2] == ')':
+               
+                #store the count for passing into function
+                itemCount = int(x[parenthOpen[listIndex]+1])
+                
+                # prep string for passing item name into function.
+                string = ''
+                # 4 is number of characters from '(' where text starts (assuming one space after ')').
+                n = 4
+                # gather text by appending characters to string until you see comma delimeter
+                while x[parenthOpen[listIndex]+n] != ',':
+                    string.append(x[parenthOpen[listIndex]+n])
+                    n += 1
+                
+                #pass string into a function to check if it has already been added to the list of items and add to the count.
+            #double digit case
+            else:
+                #store the count for passing into function
+                itemCount = int(x[parenthOpen[listIndex]+1:parenthOpen[listIndex]+3])
+                
+    
+       # else:
+            #print('alpha')
         
         listIndex += 1
         
