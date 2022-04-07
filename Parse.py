@@ -8,6 +8,20 @@ def find_all(a_str, sub):
         yield start
         start += len(sub)
 
+#function to identify if an item is already in the list, and then add to its count
+def update_item_list(list, itemName, itemCount):
+    
+    #Search the list for the item name
+    for item in list:
+        #if name is found, update the item count and return the list
+        if item[0] == itemName:
+            item[1] += itemCount
+            return list
+    
+    #if item name isn't found in the list add it and its count to the end of the list, then return it.
+    list.append([itemName,itemCount])
+    return list
+
 
 #opens text file into python script
 with open ('3-26 Boutique Sales.txt', 'r') as f:
@@ -24,10 +38,8 @@ with open ('3-26 Boutique Sales.txt', 'r') as f:
 #sets the dollar total to 0
 total = 0
 
-#initializes empty lists for item name and count, then combines them into a 2d list
-iName = []
-iCount = []
-items = [iName,iCount]
+#initializes an empty list to store item names and counts in a 2D list
+items = []
 
 #iterates through each line to collect the dollar amounts
 for x in lines:
@@ -93,26 +105,28 @@ for x in lines:
             if x[parenthOpen[listIndex]+2] == ')':
                
                 #store the count for passing into function
-                itemCount = int(x[parenthOpen[listIndex]+1])
+                iCount = int(x[parenthOpen[listIndex]+1])
                 
                 # prep string for passing item name into function.
                 string = ''
                 # 4 is number of characters from '(' where text starts (assuming one space after ')').
                 n = 4
+
+                #TODO fix error for index out of bounds here
                 # gather text by appending characters to string until you see comma delimeter
                 while x[parenthOpen[listIndex]+n] != ',':
-                    string.append(x[parenthOpen[listIndex]+n])
+                    string += x[parenthOpen[listIndex]+n]
                     n += 1
-                
-                #pass string into a function to check if it has already been added to the list of items and add to the count.
             #double digit case
             else:
                 #store the count for passing into function
-                itemCount = int(x[parenthOpen[listIndex]+1:parenthOpen[listIndex]+3])
-                
+                iCount = int(x[parenthOpen[listIndex]+1:parenthOpen[listIndex]+3])                
     
        # else:
             #print('alpha')
+        
+        #pass string into a function to check if it has already been added to the list of items and add to the count.
+                update_item_list(items, iName, iCount)
         
         listIndex += 1
         
