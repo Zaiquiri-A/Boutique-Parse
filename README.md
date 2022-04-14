@@ -4,8 +4,8 @@ This program parses through a text file containing sales info. This includes dol
 
 Current working functions:
 	Totals dollars received for each purchase
-	
-Work in progress:
 	Compile a list of unique objects sold (unique object name only appears in list once)
 	Compile a total count of unique objects sold
+	
+Work in progress:
 	Find starting amount and calculate profits 

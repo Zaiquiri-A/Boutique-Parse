@@ -18,7 +18,9 @@ def update_item_list(list, itemName, itemCount):
             item[1] += itemCount
             return list
     
-    #if item name isn't found in the list add it and its count to the end of the list, then return it.
+    #if item name isn't found in the list check for a space as the last character and delete it if found, then add the item name and its count to the end of the list, then return it.
+    if itemName[-1] == ' ':
+        itemName = itemName[:-1]
     list.append([itemName,itemCount])
     return list
 
@@ -42,48 +44,48 @@ total = 0
 items = []
 
 #iterates through each line to collect the dollar amounts
-for x in lines:
-    #print(x)
-    #print(x[0])
+for line in lines:
+    #print(line)
+    #print(line[0])
     
     #if the line doesn't star with a $, we skip that line
-    if x[0] != '$':
+    if line[0] != '$':
         continue
     
     #Sets the starting character location of the dollar amount (assumed to be 1 since $ is the first character of applicable lines)
     start = 1
     
-    #print(len(x))
+    #print(len(line))
     
     #Checks for a space after the first dollar amount character, takes care of single digit amounts (<10)
-    if x[start+1] == ' ':
+    if line[start+1] == ' ':
     
-        #print( int(x[start]))
+        #print( int(line[start]))
         
         #converts to integer and adds dollar amount into the total
-        total = total + int(x[start])
+        total = total + int(line[start])
         
     #Takes care of 2 digit amounts (10 through 99)
     else:
-        #print(x[start])
+        #print(line[start])
         
         #sets number to the first character of the dollar amount
-        number = x[start]
+        number = line[start]
         #print(number)
         
         #appends the second character of the dollar amount to the first
-        number += x[start+1]
+        number += line[start+1]
         #print(number)
         
         #Converts number to an integer and add it into the total
         total = total + int(number)
     
     #find all instances of (
-    parenthOpen = list(find_all(x, '('))
+    parenthOpen = list(find_all(line, '('))
     #print(parenthOpen)
     
     #find all instaces of )
-    parenthClose = list(find_all(x, ')'))
+    parenthClose = list(find_all(line, ')'))
     #print(parenthClose)
     
     #Sets the list index to 0 for iterating through the list of located parenthesis
@@ -94,44 +96,49 @@ for x in lines:
     while listIndex < len(parenthOpen):
         
         #print('listIndex = ' + str(listIndex))
-        #print(x[parenthOpen[listIndex] + 1].isdigit())
+        #print(line[parenthOpen[listIndex] + 1].isdigit())
         
         #Determines whether the character iside the parenthesis is a digit or a letter
-        if x[parenthOpen[listIndex]+1].isdigit():
+        if line[parenthOpen[listIndex]+1].isdigit():
             #print('digit')
+            # prep empty string for passing item name into.
+            iName = ''
 
             #finds number of characters in digit (assumed to be less than 3)
             #single digit case
-            if x[parenthOpen[listIndex]+2] == ')':
+            if line[parenthOpen[listIndex]+2] == ')':
                
                 #store the count for passing into function
-                iCount = int(x[parenthOpen[listIndex]+1])
+                iCount = int(line[parenthOpen[listIndex]+1])
                 
-                # prep string for passing item name into function.
-                string = ''
-                # 4 is number of characters from '(' where text starts (assuming one space after ')').
-                n = 4
+                # 4 is number of characters from '(' where text starts (assuming one space after end parenthesis).
+                startIndex = 4
 
-                #TODO fix error for index out of bounds here
-                # gather text by appending characters to string until you see comma delimeter
-                while x[parenthOpen[listIndex]+n] != ',':
-                    string += x[parenthOpen[listIndex]+n]
-                    n += 1
+                #print(len(line))
+
+                # gather text by appending characters to string until you hit the end of the line, or see a comma delimeter
+                while line[parenthOpen[listIndex] + startIndex] != '\n' and line[parenthOpen[listIndex] + startIndex] != ',' and line[parenthOpen[listIndex] + startIndex] != '(':
+                    #print(line[parenthOpen[listIndex] + startIndex])
+                    iName += line[parenthOpen[listIndex] + startIndex]
+                    #print(iName)
+                    startIndex += 1
+                
+                #pass string into a function to check if it has already been added to the list of items and add to the count.
+                update_item_list(items, iName, iCount)
             #double digit case
             else:
                 #store the count for passing into function
-                iCount = int(x[parenthOpen[listIndex]+1:parenthOpen[listIndex]+3])                
+                iCount = int(line[parenthOpen[listIndex]+1:parenthOpen[listIndex]+3])                
     
        # else:
             #print('alpha')
         
-        #pass string into a function to check if it has already been added to the list of items and add to the count.
-                update_item_list(items, iName, iCount)
+        
         
         listIndex += 1
         
     
-    
+print(items)
 
 #Displays total dollar amount
 print('Total Sales: $' + str(total))
